@@ -10,6 +10,7 @@ import dagger.Component
 @LogisticScope
 interface LogisticComponent {
     fun inject(preferenceHelper: PreferenceHelper)
+
     fun inject(mainActivity: MainActivity)
     fun inject(repository: Repository)
 }
