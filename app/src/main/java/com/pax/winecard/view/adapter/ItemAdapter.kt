@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.pax.winecard.R
-import com.pax.winecard.domain.entities.Item
+import com.pax.winecard.domain.models.BaseModel
+import com.pax.winecard.domain.models.Wine
 import kotlinx.android.synthetic.main.item_item.view.*
 
-class ItemAdapter(private var items: List<Item>, private val listener: (Item) -> Unit) :
+class ItemAdapter(private var baseModels: List<BaseModel>, private val listener: (BaseModel) -> Unit) :
     RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -17,22 +18,25 @@ class ItemAdapter(private var items: List<Item>, private val listener: (Item) ->
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        items[position].let { holder.bind(it, listener) }
+        baseModels[position].let { holder.bind(it, listener) }
     }
 
     override fun getItemViewType(position: Int): Int = R.layout.item_item
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int = baseModels.size
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(item: Item, listener: (Item) -> Unit) = with(itemView) {
-            button.text = item.name
-            button.setOnClickListener { listener(item) }
+        fun bind(baseModel: BaseModel, listener: (BaseModel) -> Unit) = with(itemView) {
+            button.text = baseModel.name
+            if (baseModel is Wine) {
+                button.text = "${baseModel.name}  ${baseModel.description}"
+            }
+            button.setOnClickListener { listener(baseModel) }
         }
     }
 
-    fun setItems(tables: List<Item>) {
-        this.items = tables
+    fun setItems(tables: List<BaseModel>) {
+        this.baseModels = tables
         notifyDataSetChanged()
     }
 
